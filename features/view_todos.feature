@@ -1,6 +1,4 @@
-# Story 2 of 5 (ECSE 429 Part B, working alone, todos only)
-# Normal flow (view the list), alternate flow (view one todo by its id)
-# and error flow (a todo id that does not exist).
+# Story 2: view my todos
 
 Feature: View my todos
   As a user

@@ -1,76 +1,71 @@
 # ECSE 429 Part B: story tests for the todo list manager
 
-Author: Hamza Khalfi, 261169045, hamza.khalfi@mail.mcgill.ca
+Hamza Khalfi, 261169045, hamza.khalfi@mail.mcgill.ca
 
 Story tests for the REST API Todo List Manager (`runTodoManagerRestAPI-1.5.5.jar`).
-I work alone, so I wrote 5 user stories about todos (and the categories and projects a
-todo belongs to). Each story has a normal, an alternate and an error flow, written as
-Gherkin scenario outlines in `features/` and run with pytest-bdd (Cucumber's Gherkin for
-Python). Part A, the exploratory notes and unit tests, is in a separate repository.
+I work alone, so I wrote 5 user stories about todos. Each story has a normal, an
+alternate and an error flow, written as Gherkin scenario outlines in `features/` and run
+with pytest-bdd. Part A is in a separate repository. I built this with help from Claude,
+see the "Generative AI usage" section of my report.
 
 ## The stories
 
 | # | Story | Feature file |
 |---|-------|--------------|
 | 1 | As a user I want to add a todo so that I can keep track of the tasks I still have to do | `add_todo.feature` |
-| 2 | As a user I want to look at my todos so that I know what is on my list and what is still open | `view_todos.feature` |
+| 2 | As a user I want to look at my todos so that I know what is on my list | `view_todos.feature` |
 | 3 | As a user I want to mark a todo as done, or reopen it, so that I can see which tasks are finished | `complete_todo.feature` |
 | 4 | As a user I want to put a todo in a category so that I can group related tasks together | `categorize_todo.feature` |
 | 5 | As a user I want to delete a todo so that my list only holds the tasks I still care about | `delete_todo.feature` |
 
-`service_availability.feature` adds one more scenario outline: a request must fail when
-the todo manager is not running.
+`service_availability.feature` is one extra scenario: a request has to fail when the todo
+manager is not running.
 
-## Running
+## How to run
 
-Needs Python 3.11+, Java, and port 4567 free. The application jar is not in the repository.
+You need Python 3.11+, Java, and port 4567 free. The jar is not in the repo.
 
     pip install -r requirements.txt
     export TODO_JAR=/path/to/runTodoManagerRestAPI-1.5.5.jar
     pytest -v
 
-* The tests run in a **random order** (pytest-randomly). The seed is printed at the top of
-  each run. `pytest -v -p randomly --randomly-seed=1234` replays an order, and
+* The tests run in a random order (pytest-randomly) and the seed is printed at the top.
+  `pytest -v -p randomly --randomly-seed=1234` runs the same order again and
   `pytest -v -p no:randomly` runs them in file order.
-* A story: `pytest tests/test_add_todo.py -v`.
-* Expected result: 35 tests, 32 passed and 3 xfailed (the bugs below).
+* One story: `pytest tests/test_add_todo.py -v`
+* Expected result: 35 tests, 32 passed and 3 xfailed (the 3 bugs below).
 
-## How a scenario runs
+## How the tests work
 
-* **Background.** Every feature starts with the same two steps: the todo manager is running
-  (the scenario fails if nothing answers on port 4567), and the list holds the 2 default
-  todos. The second step also keeps a copy of those 2 todos.
-* **Clean start and clean finish.** Each scenario starts its own copy of the jar and shuts
-  it down afterwards, so it always starts from the default data and leaves nothing behind.
-  This is what lets the scenarios run in any order.
-* **Correctness and side effects.** Scenarios check status codes, response bodies and what
-  happened to the data. The step "the default todos are unchanged" compares the 2 default
-  todos with the copy kept in the Background, so an action that also changes another todo
-  is caught.
-* **Expected failures.** A scenario tagged `@xfail` describes what the API should do. It
-  fails today because of a bug (see `bugs/`), so pytest reports it as an expected failure.
-  Once the bug is fixed the scenario passes, pytest reports it as xpassed and the tag
-  can be removed.
+* Every feature starts with the same Background: the todo manager is running (the test
+  fails if nothing answers on port 4567) and the list has the 2 default todos.
+* Every scenario starts its own copy of the app and shuts it down at the end, so it always
+  starts from the default data. That is why the scenarios can run in any order.
+* The scenarios check the status code, the response and what happened to the data. The
+  step "the default todos are unchanged" compares the 2 default todos with the copy taken
+  in the Background, to catch an action that changes another todo by mistake.
+* A scenario tagged `@xfail` says what the API should do, but it fails today because of a
+  bug (see `bugs/`), so pytest reports it as an expected failure.
 
-## Layout
+## Files
 
-    features/              the Gherkin scenario outlines, one file per story
-    tests/step_definitions/  the step definition library, shared by all features
-        common_steps.py        background, status codes, error messages, default todos
-        todo_steps.py          adding, viewing, completing, deleting todos
-        relationship_steps.py  categories and projects of a todo
-        scenario_context.py    what the steps of one scenario share
-    tests/test_*.py        one line each, binding a feature file to the steps
-    todo_api/              the helper package (client, server), as in Part A
-    bugs/                  bug reports for bugs found while writing the stories
-    conftest.py            starts and stops the application for each scenario
+    features/                the Gherkin scenario outlines, one file per story
+    tests/step_definitions/  the step definitions, shared by all features
+        common_steps.py          background, status code, error message, default todos
+        todo_steps.py            add, view, mark done, delete
+        relationship_steps.py    categories and projects
+        scenario_context.py      what the steps of one scenario share
+    tests/test_*.py          one line each, links a feature file to the steps
+    todo_api/                helper code (client, server) from Part A
+    bugs/                    bug reports
+    conftest.py              starts and stops the app for each scenario
 
-## Bugs found
+## Bugs
 
 | Bug | Story | Summary |
 |-----|-------|---------|
 | `bugs/Bug_06_category_todos_list_is_empty.md` | 4 | GET /categories/:id/todos is empty even when todos are in the category |
-| `bugs/Bug_08_deleted_category_still_listed_on_todo.md` | 4 | after DELETE /categories/:id the todos still list the deleted category |
 | `bugs/Bug_07_inconsistent_error_message_wording.md` | 3 | the "todo not found" error is worded differently on GET, PUT, DELETE and POST |
+| `bugs/Bug_08_deleted_category_still_listed_on_todo.md` | 4 | after DELETE /categories/:id the todos still list the deleted category |
 
-The five bugs found in Part A (`Bug_01` to `Bug_05`) are in the Part A repository.
+The five bugs from Part A (Bug_01 to Bug_05) are in the Part A repository.

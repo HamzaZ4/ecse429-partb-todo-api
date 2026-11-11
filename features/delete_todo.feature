@@ -1,6 +1,4 @@
-# Story 5 of 5 (ECSE 429 Part B, working alone, todos only)
-# Normal flow (delete a todo), alternate flow (delete a todo that belongs to a
-# project and a category) and error flow (delete the same todo twice).
+# Story 5: delete a todo
 
 Feature: Delete a todo
   As a user

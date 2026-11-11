@@ -1,8 +1,5 @@
-# Story 3 of 5 (ECSE 429 Part B, working alone, todos only)
-# Normal flow (mark a todo as done), alternate flow (reopen it) and error flow
-# (a done status that is not true or false).
-# The last scenario is tagged @xfail: it describes what the API should do,
-# fails today (see bugs/Bug_07) and is reported as an expected failure.
+# Story 3: mark a todo as done
+# the last scenario is @xfail, it fails because of Bug 07
 
 Feature: Mark a todo as done
   As a user

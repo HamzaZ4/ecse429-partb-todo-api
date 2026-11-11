@@ -1,6 +1,4 @@
-# Extra scenario for the "fail if the service is not running" requirement.
-# The app is not started for this scenario (@service_down), so every request
-# should fail instead of returning an answer.
+# extra scenario, not one of the 5 stories: the tests have to fail if the app is not running
 
 Feature: Know when the service is down
   As a user

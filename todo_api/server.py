@@ -13,8 +13,7 @@ class ServiceNotRunningError(AssertionError):
 
 
 class ServiceAlreadyRunningError(AssertionError):
-    # something's already listening on 4567 before we even tried to start our own jar.
-    # could be a leftover process from a crashed run, no way to know what state it's in
+    # something is already running on port 4567
     pass
 
 

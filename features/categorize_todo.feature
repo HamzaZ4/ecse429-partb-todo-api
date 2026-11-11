@@ -1,7 +1,5 @@
-# Story 4 of 5 (ECSE 429 Part B, working alone, todos only)
-# Normal flow, alternate flow and error flow for putting a todo in a category.
-# The last two scenarios are tagged @xfail: they describe what the API should do,
-# fail today (see bugs/Bug_06 and Bug_08) and are reported as expected failures.
+# Story 4: put a todo in a category
+# the last two scenarios are @xfail, they fail because of Bug 06 and Bug 08
 
 Feature: Put a todo in a category
   As a user

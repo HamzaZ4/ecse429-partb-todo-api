@@ -1,7 +1,4 @@
-# Story 1 of 5 (ECSE 429 Part B, working alone, todos only)
-# Covers POST /todos: the normal flow, two alternate flows (title only, XML)
-# and the error flow (bad request bodies).
-# Each scenario runs against a fresh copy of the app, so any order works.
+# Story 1: add a todo
 
 Feature: Add a todo
   As a user
